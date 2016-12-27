@@ -31,7 +31,7 @@ if ((($_FILES["filename"]["type"] == "image/png")
 		$p = new Photo();
 		$p->set_container_size($cw, $ch);
 		$p->set_target_size($tw, $th);
-		$n = $p->put_photo($filename, $_POST["bgcolorid"]);
+		$n = $p->put_photo($filename, $bgcolorid, $parser->get_name($target_type).", ".date("Y-m-d"));
 		// $p->render_image();
 		// $p->preview_image();
 		$download_name = $n ."张" . $parser->get_name($target_type) . "[以" . $parser->get_name($container_type) . "冲洗].jpg";

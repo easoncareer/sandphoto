@@ -30,7 +30,7 @@ class Photo
 		$this->container_height = $tmp;
 	}
 
-	function create_empty_image($bgcolorid)
+	function create_empty_image($bgcolorid, $w_start, $h_start, $wn, $hn, $GAP, $text)
 	{
 		$this->im = imagecreatetruecolor($this->container_width, $this->container_height);
 		switch($bgcolorid)
@@ -44,10 +44,34 @@ class Photo
 			default:
 				$color = imagecolorallocate($this->im, 0, 0, 120);
 		}
-		imagefill($this->im, 1, 1, $color);
-		$text = "www.sandcomp.com";
+		$black = imagecolorallocate($this->im, 0, 0, 0);
 		$white = imagecolorallocate($this->im, 255, 255, 255);
-		imagestring($this->im, 3, $this->container_width - strlen($text) * 7.5 , $this->container_height - 20 , $text, $white);
+		imagefill($this->im, 0, 0, $white);
+		$x1 = 0;
+		$y1 = 0;
+		$x2 = $this->container_width;
+		$y2 = $this->container_height;
+		if($w_start-$GAP > 1)
+			$x1 = $w_start-$GAP;
+		if($h_start-$GAP > 1)
+			$y1 = $h_start-$GAP;
+		if(($this->target_width+$GAP)*$wn+$w_start < $x2)
+			$x2 = ($this->target_width+$GAP)*$wn+$w_start;
+		if(($this->target_height+$GAP)*$hn+$h_start < $y2)
+			$y2 = ($this->target_height+$GAP)*$hn+$h_start;
+		imagefilledrectangle($this->im, $x1, $y1, $x2, $y2, $color);
+		$fontfile = "./msyh.ttf";
+		$font_size = 15;
+		$angle = 0;
+
+		// Get Bounding Box Size
+		$text_box = imagettfbbox($font_size, $angle, $fontfile, $text);
+
+		// Get your Text Width and Height
+		$text_width = $text_box[2]-$text_box[0];
+		$text_height = $text_box[7]-$text_box[1];
+
+		imagettftext($this->im, $font_size, $angle, floor(($this->container_width - $text_width)/2), floor(($this->container_height + $y2 - $text_height)/2), $black, $fontfile, $text);
 	}
 
 	function get_pixel_from_CM($value)
@@ -62,7 +86,7 @@ class Photo
 		$this->target_height = $this->get_pixel_from_CM($h);
 	}
 
-	function put_photo($path, $bgcolorid="blue")
+	function put_photo($path, $bgcolorid="blue", $text="By iYUYUE.net")
 	{
 		$size = getimagesize($path);
 		$w = $size[0];
@@ -86,7 +110,7 @@ class Photo
 			$cut_x = 0;
 		}
 
-		$GAP = 5;
+		$GAP = 3;
 
 		$wn = floor($this->container_width / ($this->target_width + $GAP));
 		$hn = floor($this->container_height/ ($this->target_height + $GAP));
@@ -103,7 +127,7 @@ class Photo
 
 		$w_start = ($this->container_width- $wn * ($this->target_width + $GAP) + $GAP) / 2;
 		$h_start = ($this->container_height- $hn * ($this->target_height + $GAP) + $GAP) / 2;
-		$this->create_empty_image($bgcolorid);
+		$this->create_empty_image($bgcolorid, $w_start, $h_start, $wn, $hn, $GAP, $text);
 		$im2 = $this->imagecreatefromany($path);
 		for ($i = 0; $i < $wn; $i++)
 		{
@@ -203,7 +227,7 @@ class PhotoTypeParser
 		$this->count = 0;
 		while (($line= fgets($fh)) !== FALSE)
 		{
-			$data = split(',', $line);
+			$data = explode(',', $line);
 			if (count($data) != 3) continue;
 
 			$this->name_array[$this->count] = $data[0];
@@ -229,7 +253,7 @@ class PhotoTypeParser
 
 	function render_select($name, $min_size = 0, $max_size=100000)
 	{
-		print("<select name='$name' id='$name'>");
+		print("<select name='$name' id='$name' class='form-control'>");
 		for ($i = 0; $i < $this->count; $i++)
 		{
 			if ($this->width_array[$i] > $min_size && $this->width_array[$i] < $max_size)

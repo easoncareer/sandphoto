@@ -1,8 +1,8 @@
 <?php
 include("sandphoto.inc");
 
-$filename = "/var/sandcomp/apache/htdocs/sandphoto/sample.jpg";
-$temp_path = "/var/sandcomp/apache/htdocs/sandphoto/temp";
+$filename = "/home/wwwroot/api/photo/id/sample.jpg";
+$temp_path = "/home/wwwroot/api/photo/id/temp";
 
 
 $target_type = $_GET["t"];
@@ -21,9 +21,9 @@ if (!file_exists($cachePath))
 	$p = new Photo();
 	$p->set_container_size($cw, $ch);
 	$p->set_target_size($tw, $th);
-	$n = $p->put_photo($filename, $bgcolorid);
+	$n = $p->put_photo($filename, $bgcolorid, $parser->get_name($target_type).", ".date("Y-m-d"));
 	$p->preview_image($cachePath);
-        system("/usr/local/bin/optipng " . $cachePath . " >/dev/null 2>/dev/null");
+        system("/usr/bin/optipng " . $cachePath . " >/dev/null 2>/dev/null");
 }
 header("location: temp/" . $cacheFilename);
 exit();
