@@ -71,7 +71,8 @@ class Photo
 		$text_width = $text_box[2]-$text_box[0];
 		$text_height = $text_box[7]-$text_box[1];
 
-		imagettftext($this->im, $font_size, $angle, floor(($this->container_width - $text_width)/2), floor(($this->container_height + $y2 - $text_height)/2), $black, $fontfile, $text);
+		if($this->container_height - $y2 > $text_height)
+			imagettftext($this->im, $font_size, $angle, floor(($this->container_width - $text_width)/2), floor(($this->container_height + $y2 - $text_height)/2), $black, $fontfile, $text);
 	}
 
 	function get_pixel_from_CM($value)
