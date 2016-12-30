@@ -13,7 +13,20 @@ function updatePreview()
 	$container_type = $("#container_type option:selected").val();
 	$bgcolorid= $("#bgcolorid input:radio:checked").val();
 	if ($target_type && $container_type && $bgcolorid) {
+		var img = document.getElementById("previewImg");
+		if(img.clientHeight > 0) {	
+			$("#tempImg").attr("data-src", "holder.js/"+img.clientWidth+"x"+img.clientHeight+"?text=预览生成中...");
+			Holder.run({
+				images: "#tempImg"
+			});
+		}
 		$("#previewImg").attr("src", "./preview.php?t=" + $target_type + "&c=" + $container_type + "&b=" + $bgcolorid);
+		$("#previewImg").hide();
+		$("#tempImg").show();
+		$("#previewImg").on('load', function(){
+  			$('#tempImg').hide();
+			$("#previewImg").show();
+		});
 	}
 }
 
