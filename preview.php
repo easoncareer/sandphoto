@@ -1,7 +1,8 @@
 <?php
 include("sandphoto.inc");
 
-$filename = "/home/wwwroot/api/photo/id/sample.jpg";
+$filename1 = "/home/wwwroot/api/photo/id/sample.jpg";
+$filename2 = "/home/wwwroot/api/photo/id/sample.png";
 $temp_path = "/home/wwwroot/api/photo/id/temp";
 
 
@@ -21,12 +22,14 @@ if (!file_exists($cachePath))
 	$p = new Photo();
 	$p->set_container_size($cw, $ch);
 	$p->set_target_size($tw, $th);
+	if(floatval($tw) === floatval($th))
+		$filename = $filename2;
+	else
+		$filename = $filename1;
 	$n = $p->put_photo($filename, $bgcolorid, $parser->get_name($target_type).", ".date("Y-m-d"));
 	$p->preview_image($cachePath);
         system("pngquant --ext=.png --force " . $cachePath . " >/dev/null 2>/dev/null");
 }
 header("location: temp/" . $cacheFilename);
 exit();
-
-
 ?>
