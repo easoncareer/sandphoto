@@ -36,7 +36,7 @@
 
 			<p>
 				<img id="previewImg" alt="" style="max-width:100%"/>
-				<img id="tempImg" data-src="holder.js/333x500?text=预览生成中..."/>
+				<img id="tempImg" src="./loader.gif"/>
 			</p>
 
 			<p><strong>第四步</strong>, 选择你的证件照片：</p>
@@ -54,7 +54,6 @@
 		<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.fileinput/4.3.6/js/fileinput.min.js"></script>
 		<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="//cdn.jsdelivr.net/holder/2.9.4/holder.min.js"></script>
 		<script type="text/javascript" src="./sandphoto.js"></script>
 	</body>
 </html>
